@@ -1,0 +1,13 @@
+http:
+  host: "0.0.0.0"
+  port: "8081"
+  
+https:
+  host: "0.0.0.0"
+  port: "4443"
+  
+keyStore:
+  path: "exavalu-certificate.jks"
+  alias: "localserver"
+  key_password: "exavalu"
+  password: "exavalu"

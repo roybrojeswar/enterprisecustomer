@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:tls="http://www.mulesoft.org/schema/mule/tls"
+	xmlns:api-gateway="http://www.mulesoft.org/schema/mule/api-gateway"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/api-gateway http://www.mulesoft.org/schema/mule/api-gateway/current/mule-api-gateway.xsd
+http://www.mulesoft.org/schema/mule/tls http://www.mulesoft.org/schema/mule/tls/current/mule-tls.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="1e1d4a17-dbe1-4262-99ae-fea3bc8e3a78" >
+		<http:listener-connection host="0.0.0.0" port="8081">
+		</http:listener-connection>
+	</http:listener-config>
+	<http:request-config name="HTTP_Request_configuration" doc:name="HTTP Request configuration" doc:id="db437329-ede5-4208-89a9-546f63d07bb6" basePath="http://errordemopoc.us-e2.cloudhub.io/errorHandler">
+		<http:request-connection host="${http.port}" port="8081">
+		</http:request-connection>
+	</http:request-config>
+	<configuration-properties doc:name="Configuration properties" doc:id="b17dfefb-8eda-459e-967d-6cbbe44e9471" file="config-properties.yaml" />
+	<configuration doc:name="Configuration" doc:id="16715cac-4a71-44a8-bb84-057a6bccb13e" defaultErrorHandler-ref="globalErrorHandlerError_Handler" />
+	<api-gateway:autodiscovery apiId="15862469" doc:name="API Autodiscovery" doc:id="bdefe93e-be11-4682-b278-1bc7397bffb3" flowRef="enterprisecustdetails-main" />
+	<flow name="globalErrorHandlerFlow" doc:id="3ea4508a-8002-42de-ad62-9557d774f743" >
+		<ee:transform doc:name="Transform Message" doc:id="64af6237-317b-4a0e-aefc-42e66e4bfa9d" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/xml
+---
+{
+	ESBerrors: {
+		ApplicationArea: {
+			TransactionInfo: {
+				transactionId: correlationId,
+				businessDomain: 'NA',
+				serviceId: 'NA',
+				InterfaceName: app.name,
+				flowId: 'NA' ,
+				flowName: flow.name,
+				UserId: 'NA',
+				executionStartTime: 'NA',
+				ResponseRequired: 'NA',
+				LogLevel: 'NA',
+				LogPersistance: 'NA'
+			}
+		},
+		transactionDetails: {
+			attributes: message.attributes,
+			variables: 'NA',
+			payload: message.payload
+		},
+		internalErrorDetails: error.detailedDescription,
+		errorResponse @(id: null): {
+			errorMessage: error.errorMessage.attributes,
+			errorTypeIdentifier: error.errorType.identifier,
+			errorTypeNamespace: error.errorType.namespace,
+			errorStatusCode: 'NA'
+		}
+	}
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<logger level="INFO" doc:name="On Error Continue(At interface level error handler)" doc:id="93fe611d-0f20-4d02-8191-65072d734e54" message="On Error Continue(At interface level error handler)"/>
+		<set-payload value="#[payload]" doc:name="payload" doc:id="8433102c-9452-47f9-8b4d-f2ba5397c631" />
+		<http:request method="POST" doc:name="Request" doc:id="f1e520d8-9172-4a51-b6c0-412b771480c8" url="http://errordemopoc.us-e2.cloudhub.io/errorHandler"/>
+	</flow>
+	<error-handler name="globalErrorHandlerError_Handler" doc:id="fd2e7307-7ff7-442f-996b-a2272192e2a1" >
+		<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="66420adb-a28f-4b3a-9606-cf283ea68dcf" type="ANY">
+			<ee:transform doc:name="xml_error_formart" doc:id="49e73cad-776e-44d6-9cb9-02c8a28dd312" >
+				<ee:message >
+					<ee:set-payload ><![CDATA[%dw 2.0
+output application/xml
+---
+{
+	ESBerrors: {
+		ApplicationArea: {
+			TransactionInfo: {
+				transactionId: correlationId,
+				businessDomain: 'NA',
+				serviceId: 'NA',
+				InterfaceName: app.name,
+				flowId: 'NA' ,
+				flowName: flow.name,
+				UserId: 'NA',
+				executionStartTime: 'NA',
+				ResponseRequired: 'NA',
+				LogLevel: 'NA',
+				LogPersistance: 'NA'
+			}
+		},
+		transactionDetails: {
+			attributes: message.attributes,
+			variables: 'NA',
+			payload: message.payload
+		},
+		internalErrorDetails: error.detailedDescription,
+		errorResponse @(id: null): {
+			errorMessage: error.errorMessage.attributes,
+			errorTypeIdentifier: error.errorType.identifier,
+			errorTypeNamespace: error.errorType.namespace,
+			errorStatusCode: 'NA'
+		}
+	}
+}]]></ee:set-payload>
+				</ee:message>
+			</ee:transform>
+			<logger level="INFO" doc:name="On Error Continue(At interface level error handler)" doc:id="3dd7f35c-de97-4869-9622-22ab49999c07" message="On Error Continue(At interface level error handler)"/>
+			<set-payload value="#[payload]" doc:name="payload" doc:id="51e0f8b6-728f-4d80-9127-9e9dc290e007" />
+			<http:request method="POST" doc:name="Request" doc:id="6fd23891-11a5-46d6-99ac-173b287969d0" outputMimeType="application/xml" url="http://errordemopoc.us-e2.cloudhub.io/errorHandler">
+				<http:uri-params><![CDATA[#[output application/java
+---
+{
+	"customerID" : "111111111111111"
+}]]]></http:uri-params>
+				<http:query-params ><![CDATA[#[output application/java
+---
+{
+	"Key" : "Value"
+}]]]></http:query-params>
+			</http:request>
+		</on-error-continue>
+	</error-handler>
+</mule>

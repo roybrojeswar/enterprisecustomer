@@ -1,0 +1,58 @@
+#%RAML 1.0
+title: enterpriseCustDetails
+version: v1
+protocols: [ HTTP, HTTPS ]
+
+types:
+  Datatype: !include /exchange_modules/afd79888-16c6-487f-8caa-338e9d8c3207/enterprisecustdetails-datatype/1.0.0/enterprisecustdetails-datatype.raml
+traits:
+  client-id-required:
+    headers:
+      client_id:
+        type: string
+      client_secret:
+        type: string
+    responses:
+      401:
+        description: Unauthorized, The client_id or client_secret are not valid or the client does not have access.
+      404:
+        description: no access
+      429:
+        description: The client used all of it's request quota for the current period.
+      500:
+        description: An error ocurred, see the specific message.
+      503:
+        description: Contracts Information Unreachable.
+  
+/customer:
+  /details:
+    is:
+      [client-id-required]
+    get:
+      queryParameters:
+        customerID:
+          required: true
+          type: string
+          minLength: 15
+          maxLength: 15
+          #pattern: "^\\d{15}$"
+      responses:
+        200:
+          body:
+            application/json:
+              example: !include /exchange_modules/afd79888-16c6-487f-8caa-338e9d8c3207/enterprisecustdetails-example/1.0.1/enterprisecustdetails-example.raml
+        404:
+          body:
+            application/json:
+              example: 
+                {"message": "Customer not Found"}
+        400:
+          body:
+            application/json:
+              example: 
+                {"message": "Bad Request"}
+        403:
+          body:
+            application/json:
+              example: 
+                {"message": "Request Forbidden"}

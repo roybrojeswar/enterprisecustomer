@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ESBerrors xsi:noNamespaceSchemaLocation="schema.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <ApplicationArea Type="string">
+    <TransactionInfo>
+      <transactionId>string</transactionId>
+      <businessDomain>string</businessDomain>
+      <serviceId>string</serviceId>
+      <InterfaceName>string</InterfaceName>
+      <flowId>string</flowId>
+      <flowName>string</flowName>
+      <UserId>string</UserId>
+      <executionStartTime>string</executionStartTime>
+      <ResponseRequired>string</ResponseRequired>
+      <LogLevel>string</LogLevel>
+      <LogPersistance>string</LogPersistance>
+    </TransactionInfo>
+  </ApplicationArea>
+  <transactionDetails>
+    <attributes>string</attributes>
+    <variables>string</variables>
+    <payload>string</payload>
+  </transactionDetails>
+  <internalErrorDetails>string</internalErrorDetails>
+  <errorResponse id="string">
+    <errorMessage>string</errorMessage>
+    <errorTypeIdentifier>string</errorTypeIdentifier>
+    <errorTypeNamespace>string</errorTypeNamespace>
+    <errorStatusCode>string</errorStatusCode>
+  </errorResponse>
+</ESBerrors>

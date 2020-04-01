@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:validation="http://www.mulesoft.org/schema/mule/validation" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/validation http://www.mulesoft.org/schema/mule/validation/current/mule-validation.xsd">
+	<validation:config name="Validation_Config" doc:name="Validation Config" doc:id="22d5314c-d0ce-4d66-a80a-0135b2df32c8" />
+	<flow name="implementationECDFlow" doc:id="1ccf745d-b582-40e2-a002-33d2a3192910" >
+		<ee:transform doc:name="Transform Message" doc:id="cc2cb794-a398-4a13-b052-7cb6bc5322a5" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/xml
+---
+{
+    soapEnvelop:{
+        soapHeader:{
+            RequestContextSoapHeader:{
+                "DONumber" : 99,
+                "sysIdent" : 1,
+                "serialNum" : 15,
+                "WorkstationId" : 20,
+                "ApplicationId": "Portal",
+                "ApplicationVersion" : 2.5,
+                "OperationVersion" : 1.0,
+                "RequestId" : 1,
+                "timestamp" : "19.11",
+                "ZuluTime" : "20.00",
+                "ms" : "Exavalu",
+                "RequestTimestamp" : "20",
+                "DebugMode" : "false",
+                "EmployeeId" : 999999
+            }
+        },
+        soapBody:{
+            inputArguments:{
+                Argument:{
+                    "customerID" : message.attributes.queryParams.customerID
+                }
+            }
+        }
+    }
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<logger level="INFO" doc:name="EnterpriseCustomerDetails Service Execution Ended" doc:id="ea8e837e-6399-4a1b-97af-aaab4fbe944c" message="EnterpriseCustomerDetails Service Execution Ended"/>
+	</flow>
+</mule>

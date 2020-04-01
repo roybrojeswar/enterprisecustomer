@@ -1,0 +1,36 @@
+{
+  "configs": [
+    "implementationECD.xml",
+    "globalErrorHandler.xml",
+    "enterprisecustdetails.xml"
+  ],
+  "secureProperties": [],
+  "redeploymentEnabled": true,
+  "name": "com.mycompany:enterprisecustdetailsapi:1.0.0-SNAPSHOT",
+  "minMuleVersion": "4.2.0",
+  "requiredProduct": "MULE_EE",
+  "classLoaderModelLoaderDescriptor": {
+    "id": "mule",
+    "attributes": {
+      "exportedPackages": [],
+      "exportedResources": [
+        "api/enterprisecustdetails.raml",
+        "api/exchange_modules/afd79888-16c6-487f-8caa-338e9d8c3207/enterprisecustdetails-datatype/1.0.0/enterprisecustdetails-datatype.raml",
+        "api/exchange_modules/afd79888-16c6-487f-8caa-338e9d8c3207/enterprisecustdetails-example/1.0.1/enterprisecustdetails-example.raml",
+        "application-types.xml",
+        "config-properties.yaml",
+        "enterprisecustdetails.xml",
+        "examples/Error_Schema.xml",
+        "exavalu-certificate.jks",
+        "globalErrorHandler.xml",
+        "implementationECD.xml",
+        "localserver.p12",
+        "log4j2.xml"
+      ]
+    }
+  },
+  "bundleDescriptorLoader": {
+    "id": "mule",
+    "attributes": {}
+  }
+}
